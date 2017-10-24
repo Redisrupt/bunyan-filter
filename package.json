@@ -23,7 +23,7 @@
     "_lint": "eslint --cache --cache-location='.cache/' -f 'node_modules/eslint-friendly-formatter' ",
     "lint": "npm run _lint -- 'src/**/*.js' 'specs/**/*.spec.js' ",
     "test": "npm run verify",
-    "verify": "npm run eslint",
+    "verify": "npm run lint",
     "changelog": "changelogx -f markdown -o ./changelog.md",
     "do-changelog": "npm run changelog && git add ./changelog.md && git commit -m 'DOC: Generate changelog' --no-verify",
     "install-hooks": "prepush install && changelogx install-hook && precommit install",
