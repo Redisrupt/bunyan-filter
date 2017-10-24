@@ -76,18 +76,7 @@ const processLogFile = (inputFile, checks) => {
     dfd.reject(err);
   });
 
-  const filter = entity => checks.reduce((acc, fn) => acc && fn(entity), true);
-  // const date = moment(entity.time);
-  // const ref = moment('2017-10-14T20:58:39.690Z');
-  // const rangeA = ref.clone().subtract(1, 'minutes');
-  // const rangeB = ref.clone().add(0, 'minutes');
-
-  // return (
-  //   // (entity.url || '').indexOf('/partyDetails/') > -1 &&
-  //   (entity.msg || '').indexOf('getAllScreeningResultsForParty') > -1 && entity.name === 'api' && date.isAfter(rangeA) && date.isBefore(rangeB)
-  // );
-
-  // return true;
+  const filter = (...args) => checks.reduce((acc, fn) => acc && fn(...args), true);
 
   let count = 0;
 
@@ -100,7 +89,7 @@ const processLogFile = (inputFile, checks) => {
       const cleanLine = line.substring(index);
       const entity = JSON.parse(cleanLine);
 
-      if (filter(entity)) {
+      if (filter(entity, cleanLine)) {
         const entry = entity.level === 50 ? JSON.stringify(entity, null, 2) : JSON.stringify(entity);
         let before = entity.url ? `url: ${entity.url}\n` : '';
         before += entity.msg ? `msg: ${entity.msg}\n` : '';
