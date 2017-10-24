@@ -1,7 +1,7 @@
 {
-  "name": "bunyan-filter",
+  "name": "@redisrupt/bunyan-filter",
   "version": "1.0.0",
-  "description": "",
+  "description": "super simple bunyan logs parser that can handle several logs files at once",
   "main": "dist/process-logs.js",
   "bin": {
     "bunyan-filter": "dist/cli.js"
@@ -35,7 +35,7 @@
     "prepublish": "npm run build",
     "build": "babel src/ -d dist/"
   },
-  "author": "",
+  "author": "royriojas",
   "license": "ISC",
   "dependencies": {
     "babel-plugin-transform-object-rest-spread": "6.23",
