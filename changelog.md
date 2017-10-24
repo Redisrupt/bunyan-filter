@@ -1,5 +1,10 @@
 
 # @redisrupt/bunyan-filter - Changelog
+## v1.0.2
+- **Refactoring**
+  - pass the raw log line - [8353865]( undefined/commit/8353865 ), [Roy Riojas](https://github.com/Roy Riojas), 23/10/2017 20:46:43
+
+    
 ## v1.0.1
 - **Refactoring**
   - Added some extra info - [6164cb8]( undefined/commit/6164cb8 ), [Roy Riojas](https://github.com/Roy Riojas), 23/10/2017 20:22:41
