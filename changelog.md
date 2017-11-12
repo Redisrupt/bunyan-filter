@@ -1,5 +1,10 @@
 
 # @redisrupt/bunyan-filter - Changelog
+## v1.0.3
+- **Refactoring**
+  - make less noisy the fact the filter is not present - [d737939]( undefined/commit/d737939 ), [Roy Riojas](https://github.com/Roy Riojas), 12/11/2017 12:30:08
+
+    
 ## v1.0.2
 - **Refactoring**
   - pass the raw log line - [8353865]( undefined/commit/8353865 ), [Roy Riojas](https://github.com/Roy Riojas), 23/10/2017 20:46:43
