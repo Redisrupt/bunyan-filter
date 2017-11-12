@@ -13,7 +13,7 @@ const tryLoadFilterModule = filterModule => {
   try {
     fn = require(resolve(filterModule));
   } catch (err) {
-    console.log('Error loading filter', err);
+    console.warn('Filter could not be loaded');
   }
 
   return fn;
