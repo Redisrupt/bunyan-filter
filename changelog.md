@@ -1,5 +1,10 @@
 
 # @redisrupt/bunyan-filter - Changelog
+## v1.0.5
+- **Build Scripts Changes**
+  - move babel related dep to devDependencies - [e6f5bee]( undefined/commit/e6f5bee ), [Roy Riojas](https://github.com/Roy Riojas), 20/11/2017 01:39:11
+
+    
 ## v1.0.4
 - **Bug Fixes**
   - Add missing dep - [f783522]( undefined/commit/f783522 ), [Roy Riojas](https://github.com/Roy Riojas), 19/11/2017 22:05:44
