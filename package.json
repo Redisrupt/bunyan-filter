@@ -1,6 +1,6 @@
 {
   "name": "@redisrupt/bunyan-filter",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "super simple bunyan logs parser that can handle several logs files at once",
   "main": "dist/process-logs.js",
   "bin": {
