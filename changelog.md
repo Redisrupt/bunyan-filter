@@ -1,5 +1,10 @@
 
 # @redisrupt/bunyan-filter - Changelog
+## v1.0.4
+- **Bug Fixes**
+  - Add missing dep - [f783522]( undefined/commit/f783522 ), [Roy Riojas](https://github.com/Roy Riojas), 19/11/2017 22:05:44
+
+    
 ## v1.0.3
 - **Refactoring**
   - make less noisy the fact the filter is not present - [d737939]( undefined/commit/d737939 ), [Roy Riojas](https://github.com/Roy Riojas), 12/11/2017 12:30:08
