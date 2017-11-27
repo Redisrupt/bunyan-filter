@@ -20,7 +20,9 @@ const tryLoadFilterModule = filterModule => {
 };
 
 const createFilters = args => {
-  const { level, compare = 'gte', filterModule = './logs-filter.js', time, minBefore = 1, minAfter = 1 } = args;
+  const { level, compare = 'gte', filter, defaultFilter, time, minBefore = 1, minAfter = 1, ...rest } = args;
+  let { filterModule } = rest;
+
   const checks = [];
   let levelComparisonFn;
 
@@ -55,12 +57,22 @@ const createFilters = args => {
     });
   }
 
+  if (defaultFilter) {
+    filterModule = './logs-filter.js';
+  }
+
   if (filterModule) {
     const filterFn = tryLoadFilterModule(filterModule);
     if (filterFn) {
       checks.push(filterFn);
     }
   }
+
+  if (filter) {
+    const filterFn = new Function('entity', 'line', filter); // eslint-disable-line no-new-func
+    checks.push(filterFn);
+  }
+
   return checks;
 };
 
