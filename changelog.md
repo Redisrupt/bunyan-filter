@@ -1,5 +1,10 @@
 
 # @redisrupt/bunyan-filter - Changelog
+## v1.0.6
+- **Refactoring**
+  - Remove default filterModule parameter, add filter prop - [f13a5a8]( undefined/commit/f13a5a8 ), [Roy Riojas](https://github.com/Roy Riojas), 27/11/2017 11:49:39
+
+    
 ## v1.0.5
 - **Build Scripts Changes**
   - move babel related dep to devDependencies - [e6f5bee]( undefined/commit/e6f5bee ), [Roy Riojas](https://github.com/Roy Riojas), 20/11/2017 01:39:11
