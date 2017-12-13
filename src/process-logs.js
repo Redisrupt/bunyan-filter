@@ -1,10 +1,9 @@
-import { expand } from './expand';
-import { resolve } from 'path';
-import { deferred } from './deferred';
-
 import LineByLineReader from 'line-by-line';
 import chalk from 'chalk';
+import { deferred } from './deferred';
+import { expand } from './expand';
 import moment from 'moment';
+import { resolve } from 'path';
 
 const tryLoadFilterModule = filterModule => {
   /* eslint-disable global-require */
@@ -53,7 +52,7 @@ const createFilters = args => {
   if (time) {
     checks.push(ent => {
       const d = moment(ent.time);
-      return d.isAfter(rangeBefore) && d.isBefore(rangeAfter);
+      return d.isSameOrAfter(rangeBefore) && d.isSameOrBefore(rangeAfter);
     });
   }
 
@@ -91,6 +90,7 @@ const processLogFile = (inputFile, checks) => {
   const filter = (...args) => checks.reduce((acc, fn) => acc && fn(...args), true);
 
   let count = 0;
+  const entries = [];
 
   lr.on('line', line => {
     // pause emitting of lines...
@@ -99,20 +99,33 @@ const processLogFile = (inputFile, checks) => {
     const index = line.indexOf('{');
     if (index > -1) {
       const cleanLine = line.substring(index);
-      const entity = JSON.parse(cleanLine);
+
+      let entity;
+      try {
+        entity = JSON.parse(cleanLine);
+      } catch (err) {
+        entity = {};
+        console.log('>>>>>> error parsing JSON\n\n', line, '\n\n');
+      }
 
       if (filter(entity, cleanLine)) {
-        const entry = entity.level === 50 ? JSON.stringify(entity, null, 2) : JSON.stringify(entity);
-        let before = entity.url ? `url: ${entity.url}\n` : '';
-        before += entity.msg ? `msg: ${entity.msg}\n` : '';
-        before += entity.time ? `time: ${entity.time}\n\n` : '';
+        const { err, error, url, msg, time, ...rest } = entity;
+        const entry = JSON.stringify(rest, null, 2);
+        const theError = err || error;
+        let before = url ? `url: ${url}\n` : '';
+
+        before += msg ? `msg: ${msg}\n` : '';
+        before += time ? `time: ${time}\n\n` : '';
+        if (theError && theError.stack) {
+          before += theError.stack ? `stack: ${theError.stack}\n\n` : '';
+        }
         let log = `\n===============\n${before}${entry}\n\n===============\n\n`;
 
         if (entity.level === 50) {
           log = chalk.red(log);
         }
         count++;
-        process.stdout.write(log);
+        entries.push({ time: entity.time, log });
       }
     }
 
@@ -120,7 +133,7 @@ const processLogFile = (inputFile, checks) => {
   });
 
   lr.on('end', () => {
-    dfd.resolve(count);
+    dfd.resolve({ entries, count });
   });
 
   return dfd;
@@ -129,21 +142,26 @@ const processLogFile = (inputFile, checks) => {
 const parseLogs = async ({ globs = ['./logs/**/*.log'], ...args } = {}) => {
   globs = Array.isArray(globs) ? globs : [globs];
   const files = await expand({ patterns: globs });
-  let errors = 0;
+  let logEntriesCount = 0;
 
   const checks = createFilters(args);
+  let allEntries = [];
 
   await files.reduce(
     (acc, file) =>
       acc.then(() =>
-        processLogFile(file, checks).then(errCount => {
-          errors += errCount || 0;
+        processLogFile(file, checks).then(res => {
+          const { count, entries } = res;
+          logEntriesCount += count || 0;
+          allEntries = allEntries.concat(entries);
         }),
       ),
     Promise.resolve(),
   );
 
-  console.error('>>>> total entries', errors);
+  const sortedEntries = allEntries.sort((a, b) => (a.time < b.time ? -1 : 1)).map(entry => entry.log);
+  process.stdout.write(sortedEntries.join('\n'));
+  process.stdout.write(`total hits: ${logEntriesCount}\n\n`);
 };
 
 export default parseLogs;
